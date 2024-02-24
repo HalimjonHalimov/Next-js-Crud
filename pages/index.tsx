@@ -1,12 +1,22 @@
 import Image from "next/image";
-import { Inter } from "next/font/google";
+import { useAuth } from "@/context";
+import Layout from "@/components/layout";
+import Post from "@/components/post";
 
-const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const { posts } = useAuth();
+
   return (
-    <main className={`w-screen min-h-screen ${inter.className}`}>
-        Hello world 
-    </main>
+      <Layout>
+        <main className="">
+          <div>Posts</div>
+          <div className="w-full h-auto grid grid-cols-5 gap-1 border border-black">
+            {posts?.map((item, i) => (
+              <Post key={i} item={item}/>
+            ))}
+          </div>
+        </main>
+      </Layout>
   );
 }
