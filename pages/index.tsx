@@ -11,7 +11,7 @@ export default function Home() {
       <Layout>
         <main className="">
           <div>Posts</div>
-          <div className="w-full h-auto grid grid-cols-5 gap-1 border border-black">
+          <div className="w-full h-auto grid grid-cols-5 gap-1">
             {posts?.map((item, i) => (
               <Post key={i} item={item}/>
             ))}
