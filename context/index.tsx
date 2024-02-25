@@ -10,6 +10,7 @@ type AuthContextType = {
   state: number;
   currentUser: UserType | null;
   posts: PostType[] | null;
+  isloading: boolean;
   handleCurrentUser: (data: UserType) => void;
   handleDelete: (id: number) => void;
   handleLogout: () => void;
@@ -21,6 +22,7 @@ export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
   const [state, setState] = useState(0);
   const [currentUser, setCurrentUser] = useState<UserType | null>(null);
   const [posts, setPosts] = useState<PostType[] | null>(null);
+  const [isloading, setIsloading] = useState(false);
 
   const handleCurrentUser = (data: UserType) => {
     setCurrentUser(data);
@@ -39,9 +41,11 @@ export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
   };
 
   const fetchData = async () => {
+    setIsloading(true);
     try {
       const { data } = await PostService.getAllPosts();
       setPosts(data);
+      setIsloading(false);
     } catch (error) {
       console.log(error);
     }
@@ -67,6 +71,7 @@ export const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
     state,
     currentUser,
     posts,
+    isloading,
     handleCurrentUser,
     handleDelete,
     handleLogout,
