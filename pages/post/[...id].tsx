@@ -4,10 +4,12 @@ import Layout from "@/components/layout";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import axios from "axios";
+import { ClipLoader } from "react-spinners";
 
 export default function Post() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+  const [isloading, setIsloading] = useState(false);
   const { posts, currentUser, handleDelete } = useAuth();
   const router = useRouter();
   const { id }: any = router.query;
@@ -15,14 +17,20 @@ export default function Post() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    if (title == "" || body == "") return console.log("fill in");
+    setIsloading(true);
+    if (title == "" || body == "") {
+      setIsloading(false);
+      return console.log("fill in");
+    }
 
     const data = { title, body, id: post?.id, userId: post?.userId };
     try {
       const response = await axios.post("/api/post/route", data);
       console.log(response.data);
+      setIsloading(false);
     } catch (error) {
       console.log(error);
+      setIsloading(false);
     }
   };
 
@@ -51,7 +59,10 @@ export default function Post() {
                 </div>
               )}
             </div>
-            <form onSubmit={handleSubmit} className="flex flex-col justify-center items-start gap-2 p-2 border border-slate-400 rounded text-xs">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col justify-center items-start gap-2 p-2 border border-slate-400 rounded text-xs"
+            >
               <label htmlFor="title">Title</label>
               <input
                 className="w-full h-auto font-medium py-1 px-2 outline-none border border-slate-700 rounded"
@@ -72,9 +83,9 @@ export default function Post() {
               />
               <button
                 type="submit"
-                className=" py-1 px-2 capitalize bg-sky-600 text-xs font-normal text-white rounded"
+                className=" w-[80px] h-6 capitalize bg-sky-600 text-xs font-normal text-white rounded"
               >
-                send
+                {isloading ? <ClipLoader color="#fff" size={14} /> : "Send"}
               </button>
             </form>
           </div>
